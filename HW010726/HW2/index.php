@@ -40,8 +40,8 @@ while ($line !== false) {
 fclose($file);
 
 
-echo "Сумма всех чисел: " . getSumOfArray($arr) . "\n";
+echo "Сумма всех чисел: " . getSumOfArray($arr) . PHP_EOL;
 
-echo "Максимальное число: " . getMaxOfArray($arr) . "\n";
+echo "Максимальное число: " . getMaxOfArray($arr) . PHP_EOL;
 
-echo "Минимальное числоа: " . getMinOfArray($arr) . "\n";
+echo "Минимальное числоа: " . getMinOfArray($arr) . PHP_EOL;
