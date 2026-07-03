@@ -1,7 +1,7 @@
 compose.override.yaml
+.idea/
 
 ###> IDE ###
-.idea/
 /.idea/
 /.vscode/
 *.iml
