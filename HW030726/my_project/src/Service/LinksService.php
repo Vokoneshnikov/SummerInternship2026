@@ -19,22 +19,27 @@ class LinksService {
     }
     public function createLink(string $link): string
     {
-        $shortLink = $this->generateLinkId();
-        $this->linksRepository->create($link, $shortLink);
 
-        return $shortLink;
+        $existingLink = $this->linksRepository->findOneBy(['oldLink' => $link]);
+        if ($existingLink) {
+            return "http://localhost:5000/short/" . $existingLink->getNewLink();
+        }
+
+        $newLink = $this->generateLinkId();
+        $this->linksRepository->create($link, $newLink);
+        return "http://localhost:5000/short/" . $newLink;
     }
     public function getOriginalLink(string $link) : string
     {
         return $this->linksRepository->getOriginalLink($link);
     }
-    public function updateLink(string $id)
+    public function updateLink(string $newLink)
     {
-        $this->linksRepository->update($id);
+        $this->linksRepository->update($newLink);
     }
-    public function deleteLink(string $id)
+    public function deleteLink(int $id)
     {
-
+        $this->linksRepository->delete($id);
     }
     function generateLinkId(): string
     {
