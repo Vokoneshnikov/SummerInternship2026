@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\ExchangeRates;
+use App\Enums\Currency;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,28 +17,13 @@ class ExchangeRatesRepository extends ServiceEntityRepository
         parent::__construct($registry, ExchangeRates::class);
     }
 
-    //    /**
-    //     * @return ExchangeRates[] Returns an array of ExchangeRates objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('e')
-    //            ->andWhere('e.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('e.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function getRatesForCurrency(Currency $currency) : array
+    {
+        return $this->findBy(['currency' => $currency]);
+    }
 
-    //    public function findOneBySomeField($value): ?ExchangeRates
-    //    {
-    //        return $this->createQueryBuilder('e')
-    //            ->andWhere('e.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function updateRates(array $rates): void
+    {
+
+    }
 }

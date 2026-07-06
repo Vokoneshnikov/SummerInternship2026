@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use App\Enums\Currency;
 use App\Repository\ProductRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
@@ -20,6 +22,12 @@ class Product
 
     #[ORM\Column(nullable: true)]
     private ?string $description = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 9, scale: 2)]
+    private ?string $price = null;
+
+    #[ORM\Column(enumType: Currency::class)]
+    private ?Currency $currency = null;
 
     public function getId(): ?int
     {
@@ -46,6 +54,30 @@ class Product
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getPrice(): ?string
+    {
+        return $this->price;
+    }
+
+    public function setPrice(string $price): static
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getCurrency(): ?Currency
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency(Currency $currency): static
+    {
+        $this->currency = $currency;
 
         return $this;
     }
