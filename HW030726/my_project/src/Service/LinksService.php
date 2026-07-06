@@ -26,6 +26,7 @@ class LinksService {
         }
 
         $newLink = $this->generateLinkId();
+        $exists = $this->linksRepository->findOneBy(['oldLink' => $newLink]);
         $this->linksRepository->create($link, $newLink);
         return "http://localhost:5000/short/" . $newLink;
     }
@@ -44,7 +45,16 @@ class LinksService {
     function generateLinkId(): string
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        return substr(str_shuffle($characters), 0, 10);
+        while (true) {
+            $randomString = substr(str_shuffle($characters), 0, 10);
+
+            $exists = $this->linksRepository->findOneBy(['newLink' => $randomString]);
+            if ($exists) {
+                continue;
+            }
+            break;
+        }
+        return $randomString;
     }
 
 }
