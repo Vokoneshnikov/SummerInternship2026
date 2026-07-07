@@ -1,38 +1,75 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Вход в систему{% endblock %}
 
 {% block body %}
-    <form method="post">
-        {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Вход в систему</strong>
+                </div>
 
-        {% if app.user %}
-            <div class="mb-3">
-                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
+                <div class="card-body">
+                    <form method="post">
+                        {% if error %}
+                            <div class="alert alert-danger">
+                                {{ error.messageKey|trans(error.messageData, 'security') }}
+                            </div>
+                        {% endif %}
+
+                        {% if app.user %}
+                            <div class="alert alert-info">
+                                Вы уже вошли как {{ app.user.userIdentifier }}
+                                <a href="{{ logout_path() }}" class="btn btn-sm btn-outline-danger ms-2">Выйти</a>
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label fw-bold">Email</label>
+                            <input type="email"
+                                   value="{{ last_username }}"
+                                   name="_username"
+                                   id="username"
+                                   class="form-control form-control-lg"
+                                   autocomplete="email"
+                                   required
+                                   autofocus
+                                   placeholder="example@email.com">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label fw-bold">Пароль</label>
+                            <input type="password"
+                                   name="_password"
+                                   id="password"
+                                   class="form-control form-control-lg"
+                                   autocomplete="current-password"
+                                   required
+                                   placeholder="Введите пароль">
+                        </div>
+
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary btn-lg" type="submit">
+                                Войти
+                            </button>
+                        </div>
+
+                        <hr>
+
+                        <div class="text-center">
+                            <p class="mb-0">
+                                Нет аккаунта?
+                                <a href="{{ path('app_register') }}" class="text-decoration-none">
+                                    Зарегистрироваться
+                                </a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
             </div>
-        {% endif %}
-
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <label for="username">Email</label>
-        <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
-        <label for="password">Password</label>
-        <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
-        <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
-
-        {#
-            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-            See https://symfony.com/doc/current/security/remember_me.html
-
-            <div class="checkbox mb-3">
-                <input type="checkbox" name="_remember_me" id="_remember_me">
-                <label for="_remember_me">Remember me</label>
-            </div>
-        #}
-
-        <button class="btn btn-lg btn-primary" type="submit">
-            Sign in
-        </button>
-    </form>
+        </div>
+    </div>
 {% endblock %}

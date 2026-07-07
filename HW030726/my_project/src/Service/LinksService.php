@@ -16,9 +16,9 @@ class LinksService {
         $this->linksRepository = $linksRepository;
         $this->path = $params->get('app.path_for_short_urls');
     }
-    public function index() : array
+    public function index(User $user) : array
     {
-        $links = $this->linksRepository->readAll();
+        $links = $this->linksRepository->findBy(['user' => $user]);
 
         return  array_map(function ($link) {
             return [

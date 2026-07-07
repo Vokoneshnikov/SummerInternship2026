@@ -1,19 +1,60 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Регистрация{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Регистрация</strong>
+                </div>
 
-    {{ form_errors(registrationForm) }}
+                <div class="card-body">
+                    {{ form_errors(registrationForm) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+                    {{ form_start(registrationForm) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+                    <div class="mb-3">
+                        {{ form_label(registrationForm.email, 'Email', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                        {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control form-control-lg', 'placeholder': 'example@email.com'}}) }}
+                        {{ form_errors(registrationForm.email) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(registrationForm.plainPassword, 'Пароль', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                        {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control form-control-lg', 'placeholder': 'Введите пароль'}}) }}
+                        {{ form_errors(registrationForm.plainPassword) }}
+                        <div class="form-text">
+                            Минимум 6 символов
+                        </div>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+                        {{ form_label(registrationForm.agreeTerms, 'Я согласен с условиями', {'label_attr': {'class': 'form-check-label'}}) }}
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            Зарегистрироваться
+                        </button>
+                    </div>
+
+                    {{ form_end(registrationForm) }}
+
+                    <hr>
+
+                    <div class="text-center">
+                        <p class="mb-0">
+                            Уже есть аккаунт?
+                            <a href="{{ path('app_login') }}" class="text-decoration-none">
+                                Войти
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

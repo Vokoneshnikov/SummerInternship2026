@@ -1,186 +1,100 @@
-{# templates/link/create.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Create New Link - URL Shortener{% endblock %}
+{% block title %}Создать короткую ссылку{% endblock %}
 
 {% block body %}
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <i class="fas fa-plus-circle me-2"></i>
-                    <strong>Create New Short Link</strong>
+                    <strong>Создать короткую ссылку</strong>
                 </div>
 
                 <div class="card-body">
-                    <!-- Форма создания -->
-                    <form action="/create" method="POST" id="createForm">
-                        <div class="mb-4">
-                            <label for="link" class="form-label fw-bold">
-                                <i class="fas fa-link me-1"></i> Original URL
-                            </label>
-                            <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="fas fa-globe"></i>
-                            </span>
-                                <input type="url"
-                                       class="form-control form-control-lg"
-                                       id="link"
-                                       name="link"
-                                       placeholder="https://example.com/very-long-url"
-                                       required
-                                       autofocus
-                                       value="{{ app.request.get('link') }}">
+                    {# Вывод flash-сообщений #}
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ label }} alert-dismissible fade show">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>
-                            <div class="form-text">
-                                <i class="fas fa-info-circle me-1"></i>
-                                Enter the full URL you want to shorten (including http:// or https://)
-                            </div>
-                        </div>
+                        {% endfor %}
+                    {% endfor %}
 
+                    {{ form_start(form, {'attr': {'id': 'createForm'}}) }}
 
-
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
-                                <i class="fas fa-cut me-2"></i> Shorten URL
-                            </button>
-                            <a href="{{ path('home') }}" class="btn btn-outline-secondary">
-                                <i class="fas fa-arrow-left me-1"></i> Back to list
-                            </a>
-                        </div>
-                    </form>
-
-                    <!-- Блок для отображения результата -->
-                    <div id="resultContainer" style="display: none;" class="mt-4">
-                        <div class="short-url-box">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="fas fa-check-circle text-success me-2"></i>
-                                    <strong>Your shortened URL:</strong>
-                                </div>
-                                <button class="btn btn-sm btn-success" id="copyResultBtn">
-                                    <i class="fas fa-copy"></i> Copy
-                                </button>
-                            </div>
-                            <div class="mt-2">
-                                <a href="#" id="resultLink" target="_blank" class="text-decoration-none">
-                                    <code class="fs-5" id="resultUrl"></code>
-                                </a>
-                            </div>
-                            <div class="mt-2">
-                                <small class="text-muted">
-                                    <i class="fas fa-clock me-1"></i>
-                                    Created successfully! Click the link to test it.
-                                </small>
-                            </div>
+                    <div class="mb-3">
+                        {{ form_label(form.oldLink, 'Оригинальный URL', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                        {{ form_widget(form.oldLink, {'attr': {'class': 'form-control form-control-lg', 'placeholder': 'https://example.com/очень-длинная-ссылка', 'autofocus': true}}) }}
+                        {{ form_errors(form.oldLink) }}
+                        <div class="form-text">
+                            Введите полный URL, который нужно сократить (включая http:// или https://)
                         </div>
                     </div>
+
+                    <div class="mb-3 form-check">
+                        {{ form_widget(form.isDisposable, {'attr': {'class': 'form-check-input'}}) }}
+                        {{ form_label(form.isDisposable, 'Одноразовая ссылка', {'label_attr': {'class': 'form-check-label'}}) }}
+                        <div class="form-text">
+                            Одноразовая ссылка будет доступна только для одного перехода
+                        </div>
+                    </div>
+
+                    <div class="mb-3" id="expiresAtWrapper">
+                        {{ form_label(form.expiresAt, 'Дата устаревания (опционально)', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                        {{ form_widget(form.expiresAt, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.expiresAt) }}
+                        <div class="form-text">
+                            Если не указать, ссылка будет действительна бессрочно
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            Сократить URL
+                        </button>
+                        <a href="{{ path('home') }}" class="btn btn-outline-secondary">
+                            ← К списку моих ссылок
+                        </a>
+                    </div>
+
+                    {{ form_end(form) }}
                 </div>
             </div>
-
-
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('createForm');
-            const submitBtn = document.getElementById('submitBtn');
-            const resultContainer = document.getElementById('resultContainer');
-            const resultUrl = document.getElementById('resultUrl');
-            const resultLink = document.getElementById('resultLink');
-            const copyResultBtn = document.getElementById('copyResultBtn');
-            const autoProtocol = document.getElementById('autoProtocol');
+            const disposableCheckbox = document.querySelector('input[name="link[isDisposable]"]');
+            const expiresAtWrapper = document.getElementById('expiresAtWrapper');
 
-            // Автоматическое добавление протокола
-            const linkInput = document.getElementById('link');
-            linkInput.addEventListener('blur', function() {
-                if (autoProtocol.checked && this.value && !this.value.match(/^https?:\/\//i)) {
-                    this.value = 'https://' + this.value;
-                }
-            });
-
-            // Обработка отправки формы через AJAX
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
-
-                // Показываем состояние загрузки
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Shortening...';
-                resultContainer.style.display = 'none';
-
-                const formData = new FormData(this);
-                const url = this.action;
-
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    const data = await response.json();
-
-                    if (response.ok) {
-                        // Показываем результат
-                        const shortUrl = data.shortUrl;
-                        resultUrl.textContent = shortUrl;
-                        resultLink.href = shortUrl;
-                        resultContainer.style.display = 'block';
-
-                        // Прокручиваем к результату
-                        resultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-                        // Очищаем поле ввода
-                        linkInput.value = '';
+            if (disposableCheckbox && expiresAtWrapper) {
+                // ✅ Показываем/скрываем поле с датой в зависимости от чекбокса
+                function toggleExpiresAt() {
+                    if (disposableCheckbox.checked) {
+                        expiresAtWrapper.style.display = 'block';
+                        // Делаем поле обязательным для одноразовой ссылки
+                        const expiresAtInput = expiresAtWrapper.querySelector('input');
+                        if (expiresAtInput) {
+                            expiresAtInput.required = true;
+                            expiresAtInput.parentElement.querySelector('.form-text').textContent =
+                                '⚠️ Обязательно для одноразовой ссылки';
+                        }
                     } else {
-                        // Показываем ошибку
-                        const errorMsg = data.error || 'An error occurred';
-                        showToast(errorMsg, 'danger');
+                        expiresAtWrapper.style.display = 'block';
+                        // Убираем обязательность
+                        const expiresAtInput = expiresAtWrapper.querySelector('input');
+                        if (expiresAtInput) {
+                            expiresAtInput.required = false;
+                            expiresAtInput.parentElement.querySelector('.form-text').textContent =
+                                'Если не указать, ссылка будет действительна бессрочно';
+                        }
                     }
-                } catch (error) {
-                    showToast('Network error. Please try again.', 'danger');
-                    console.error('Error:', error);
-                } finally {
-                    // Восстанавливаем кнопку
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fas fa-cut me-2"></i> Shorten URL';
                 }
-            });
 
-            // Копирование результата
-            copyResultBtn.addEventListener('click', function() {
-                const text = resultUrl.textContent;
-                navigator.clipboard.writeText(text).then(function() {
-                    showToast('Copied to clipboard!', 'success');
-                }).catch(function() {
-                    // Fallback
-                    const input = document.createElement('input');
-                    input.value = text;
-                    document.body.appendChild(input);
-                    input.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(input);
-                    showToast('Copied to clipboard!', 'success');
-                });
-            });
-
-            // Функция показа уведомления
-            function showToast(message, type) {
-                const toast = document.createElement('div');
-                toast.className = `flash-message alert alert-${type} alert-dismissible fade show`;
-                toast.style.position = 'fixed';
-                toast.style.top = '20px';
-                toast.style.right = '20px';
-                toast.style.zIndex = '9999';
-                toast.style.maxWidth = '350px';
-                toast.innerHTML = `
-                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            `;
-                document.body.appendChild(toast);
-
-                setTimeout(() => toast.remove(), 4000);
+                toggleExpiresAt();
+                disposableCheckbox.addEventListener('change', toggleExpiresAt);
             }
         });
     </script>

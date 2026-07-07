@@ -23,18 +23,42 @@ class LinkController extends AbstractController {
         $this->linksService = $linksService;
     }
     #[Route('/links', name: 'home')]
+    #[IsGranted("ROLE_USER")]
     public function home(): Response
     {
-        $linksData = $this->linksService->index();
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $linksData = $this->linksService->index($user);
 
         return $this->render('link/index.html.twig', [
             'links' => $linksData,
         ]);
     }
-    #[Route('/', name: 'create_page')]
-    public function createPage(): Response
+    #[Route('/', name: 'create_page', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function create(Request $request): Response
     {
-        return $this->render('link/create.html.twig');
+        $link = new Links();
+        $form = $this->createForm(LinkType::class, $link);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User $user */
+            $user = $this->getUser();
+
+            try {
+                $this->linksService->createLink($link, $user);
+                $this->addFlash('success', 'Ссылка успешно создана!');
+                return $this->redirectToRoute('home');
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Ошибка при создании ссылки: ' . $e->getMessage());
+            }
+        }
+
+        return $this->render('link/create.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     #[Route('/create', name: 'create', methods: ['POST'])]

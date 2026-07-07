@@ -46,10 +46,11 @@ class LinkType extends AbstractType
                 ]
             ])
             ->add('expiresAt', DateTimeType::class, [
-                'label' => 'Дата устаревания (опционально)',
-//                'widget' => 'single_text',  // HTML5 date input
+                'label' => 'Дата устаревания',
+                'widget' => 'single_text',  // HTML5 date input
                 'required' => false,
                 'html5' => true,
+                'input' => 'datetime_immutable',
                 'attr' => [
                     'class' => 'form-control',
                     'min' => (new \DateTime('+1 day'))->format('Y-m-d\TH:i')

@@ -139,10 +139,18 @@ class Links
         return $this->expiresAt;
     }
 
-    public function setExpiresAt(\DateTimeImmutable $expiresAt): static
+    public function setExpiresAt(?\DateTimeImmutable $expiresAt): static
     {
-        $this->expiresAt = $expiresAt;
+        // Если передана строка, преобразуем в DateTimeImmutable
+        if (is_string($expiresAt)) {
+            try {
+                $expiresAt = new \DateTimeImmutable($expiresAt);
+            } catch (\Exception $e) {
+                $expiresAt = null;
+            }
+        }
 
+        $this->expiresAt = $expiresAt;
         return $this;
     }
 }
