@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: ExchangeRatesRepository::class)]
-#[Broadcast]
+//#[Broadcast]
 class ExchangeRates
 {
     #[ORM\Id]
@@ -23,7 +23,7 @@ class ExchangeRates
     #[ORM\Column(enumType: Currency::class)]
     private ?Currency $toCurrency = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 6)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 20, scale: 10)]
     private ?string $rate = null;
 
     public function getId(): ?int

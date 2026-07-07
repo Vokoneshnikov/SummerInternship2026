@@ -13,9 +13,10 @@ class ExchangeRatesService {
 
     public function updateRates(): void
     {
+        $client = HttpClient::create();
+
         foreach (Currency::cases() as $currency) {
 
-            $client = HttpClient::create();
             $response = $client->request('GET', "https://api.exchangerate.fun/latest?base=" . $currency->name);
 
             $array = $response->toArray();
@@ -28,6 +29,9 @@ class ExchangeRatesService {
                 $newRate = new ExchangeRates();
 
                 $newRate->setFromCurrency($base);
+                if (!Currency::tryFrom($toCurrency)) {
+                    continue;
+                }
                 $newRate->setToCurrency(Currency::tryFrom($toCurrency));
                 $newRate->setRate($rate);
 
