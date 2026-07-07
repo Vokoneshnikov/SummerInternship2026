@@ -20,9 +20,24 @@ class ProductRepository extends ServiceEntityRepository
     {
         //находим по полнотекстовому поиску
     }
-    public function updateProducts(array $products): void
+    public function updateProduct(Product $product): void
     {
+        $result = $this->find($product->getId());
+        if ($result === null) {
+            $this->createProduct($product);
+            return;
+        }
+        $result->setName($product->getName());
+        $result->setDescription($product->getDescription());
+        $result->setPrice($product->getPrice());
+        $result->setCurrency($product->getCurrency());
 
+        $this->getEntityManager()->flush();
+    }
+    private function createProduct(Product $product): void
+    {
+        $this->getEntityManager()->persist($product);
+        $this->getEntityManager()->flush();
     }
 
 }

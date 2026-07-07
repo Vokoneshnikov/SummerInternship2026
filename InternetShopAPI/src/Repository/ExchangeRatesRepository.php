@@ -22,8 +22,27 @@ class ExchangeRatesRepository extends ServiceEntityRepository
         return $this->findBy(['currency' => $currency]);
     }
 
-    public function updateRates(array $rates): void
+    public function updateRate(ExchangeRates $rate): void
     {
+        $result = $this->findOneBy([
+            'from_currency' => $rate->getFromCurrency(),
+            'toCurrency' => $rate->getToCurrency()
+        ]);
 
+        if ($result === null) {
+            $this->createRate($rate);
+            return;
+        }
+
+        $result->setFromCurrency($rate->getFromCurrency());
+        $result->setToCurrency($rate->getToCurrency());
+        $result->setRate($rate->getRate());
+
+        $this->getEntityManager()->flush();
+    }
+    private function createRate(ExchangeRates $rate) : void
+    {
+        $this->getEntityManager()->persist($rate);
+        $this->getEntityManager()->flush();
     }
 }

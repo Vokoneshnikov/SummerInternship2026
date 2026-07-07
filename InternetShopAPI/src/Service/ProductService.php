@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Product;
 use App\Enums\Currency;
 use App\Repository\ExchangeRatesRepository;
 use App\Repository\ProductRepository;
@@ -40,7 +41,15 @@ class ProductService {
         if ($array === null) {
             return;
         }
+        foreach ($array as $item) {
+            $product = new Product();
+            $product->setId($item['id']);
+            $product->setName($item['name']);
+            $product->setDescription($item['description']);
+            $product->setPrice($item['price']);
+            $product->setCurrency($item['currency']);
 
-        $this->productRepository->updateProducts($array);
+            $this->productRepository->updateProduct($product);
+        }
     }
 }
