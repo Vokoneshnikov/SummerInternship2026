@@ -3,8 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Links;
-use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -13,6 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Url;
+use Symfony\Component\Validator\Constraints\GreaterThan;
 
 class LinkType extends AbstractType
 {
@@ -46,20 +45,19 @@ class LinkType extends AbstractType
                 ]
             ])
             ->add('expiresAt', DateTimeType::class, [
-                'label' => 'Дата устаревания',
-                'widget' => 'single_text',  // HTML5 date input
+                'label' => 'Дата устаревания (опционально)',
+                'widget' => 'single_text',
                 'required' => false,
-                'html5' => true,
+                'html5' => true,  // Включаем HTML5
                 'input' => 'datetime_immutable',
                 'attr' => [
                     'class' => 'form-control',
-                    'min' => (new \DateTime('+1 day'))->format('Y-m-d\TH:i')
+                    'type' => 'datetime-local',  // Явно указываем тип
+                    'step' => '60',  // Шаг в минутах
+                    'min' => (new \DateTime('+1 hour'))->format('Y-m-d\TH:i')  // Минимальная дата - через час
                 ],
                 'constraints' => [
-                    new \Symfony\Component\Validator\Constraints\Date([
-                        'message' => 'Пожалуйста, введите корректную дату'
-                    ]),
-                    new \Symfony\Component\Validator\Constraints\GreaterThan([
+                    new GreaterThan([
                         'value' => 'now',
                         'message' => 'Дата устаревания должна быть в будущем'
                     ])

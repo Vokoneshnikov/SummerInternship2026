@@ -92,20 +92,20 @@ class LinkController extends AbstractController {
         }
         return $this->redirectToRoute('home');
     }
-    #[Route('/delete/{id}', name: 'delete')]
+    #[Route('/delete/{id}', name: 'delete', methods: ['POST'])]
     #[IsGranted('ROLE_USER')]
-    public function deleteLink(Request $request, Links $link): Response
+    public function deleteLink(Links $link): Response
     {
-        $form = $this->createForm(DeleteLinkType::class, $link);
-
-        $form->handleRequest($request);
-
         /** @var User $user */
         $user = $this->getUser();
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        try {
             $this->linksService->deleteLink($link, $user);
+            $this->addFlash('success', 'Ссылка успешно удалена!');
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Ошибка при удалении ссылки: ' . $e->getMessage());
         }
+
         return $this->redirectToRoute('home');
     }
 }

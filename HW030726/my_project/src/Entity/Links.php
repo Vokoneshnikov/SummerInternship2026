@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\LinksRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -38,12 +39,12 @@ class Links
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[Assert\Date]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     #[Assert\GreaterThan(
-        value: "today"
+        value: "now",
+        message: "Дата устаревания должна быть в будущем"
     )]
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $expiresAt = null;
+    private ?\DateTimeImmutable $expiresAt = null;  // Меняем DateTimeInterface на DateTimeImmutable
 
     public function getId(): ?int
     {
@@ -139,17 +140,8 @@ class Links
         return $this->expiresAt;
     }
 
-    public function setExpiresAt(?\DateTimeImmutable $expiresAt): static
+    public function setExpiresAt(?\DateTimeImmutable $expiresAt): self
     {
-        // Если передана строка, преобразуем в DateTimeImmutable
-        if (is_string($expiresAt)) {
-            try {
-                $expiresAt = new \DateTimeImmutable($expiresAt);
-            } catch (\Exception $e) {
-                $expiresAt = null;
-            }
-        }
-
         $this->expiresAt = $expiresAt;
         return $this;
     }

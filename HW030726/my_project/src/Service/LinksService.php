@@ -28,6 +28,8 @@ class LinksService {
                 'createdAt' => $link->getCreatedAt(),
                 'lastUsedAt' => $link->getLastUsedAt(),
                 'usageCount' => $link->getUsageCount(),
+                'expiresAt' => $link->getExpiresAt(),
+                'isDisposable' => $link->isDisposable(),
             ];
         }, $links);
     }
@@ -46,6 +48,19 @@ class LinksService {
         $link->setUsageCount(0);
         $link->setUser($user);
 
+
+        if ($link->getExpiresAt() !== null && is_string($link->getExpiresAt())) {
+            try {
+                $link->setExpiresAt(new \DateTimeImmutable($link->getExpiresAt()));
+            } catch (\Exception $e) {
+                throw new \Exception('Неверный формат даты устаревания');
+            }
+        }
+
+        if ($link->isDisposable() && $link->getExpiresAt() === null) {
+            throw new \Exception('Для одноразовой ссылки необходимо указать дату устаревания');
+        }
+
         $this->linksRepository->create($link);
         return $this->path . $newLink;
     }
@@ -53,14 +68,11 @@ class LinksService {
     {
         if ($link->getUser()->getId() === $user->getId()) {
             $this->linksRepository->delete($link);
-        }
-        else {
-            throw new
-            AccessDeniedException(
-                'Вы не можете удалить эту ссылку'
-            );
+        } else {
+            throw new AccessDeniedException('Вы не можете удалить эту ссылку');
         }
     }
+
     public function processRedirect(string $newLink) : ?string
     {
         $link = $this->linksRepository->findByNewLink($newLink);
@@ -77,6 +89,9 @@ class LinksService {
             $this->linksRepository->delete($link);
             return $link->getOldLink();
         }
+
+        $link->setLastUsedAt(new \DateTimeImmutable());
+        $link->setUsageCount($link->getUsageCount() + 1);
         $this->linksRepository->update($link);
         return $link->getOldLink();
 
@@ -88,12 +103,10 @@ class LinksService {
             $randomString = substr(str_shuffle($characters), 0, 10);
 
             $exists = $this->linksRepository->findOneBy(['newLink' => $randomString]);
-            if ($exists) {
-                continue;
+            if (!$exists) {
+                return $randomString;
             }
-            break;
         }
-        return $randomString;
     }
     function isExpired(Links $link) : bool
     {

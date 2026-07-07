@@ -41,10 +41,10 @@
                     </div>
 
                     <div class="mb-3" id="expiresAtWrapper">
-                        {{ form_label(form.expiresAt, 'Дата устаревания (опционально)', {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                        {{ form_widget(form.expiresAt, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_label(form.expiresAt, 'Дата устаревания', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                        {{ form_widget(form.expiresAt, {'attr': {'class': 'form-control', 'type': 'datetime-local'}}) }}
                         {{ form_errors(form.expiresAt) }}
-                        <div class="form-text">
+                        <div class="form-text" id="expiresAtHelpText">
                             Если не указать, ссылка будет действительна бессрочно
                         </div>
                     </div>
