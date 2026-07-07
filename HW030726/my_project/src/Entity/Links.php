@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\LinksRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LinksRepository::class)]
 class Links
@@ -14,6 +15,8 @@ class Links
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "URL не может быть пустым")]
+    #[Assert\Url(message: "Введите корректный URL")]
     private ?string $oldLink = null;
 
     #[ORM\Column(length: 255)]
@@ -27,6 +30,20 @@ class Links
 
     #[ORM\Column]
     private ?int $usageCount = null;
+
+    #[ORM\Column]
+    private ?bool $isDisposable = false;
+
+    #[ORM\ManyToOne(inversedBy: 'links')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    #[Assert\Date]
+    #[Assert\GreaterThan(
+        value: "today"
+    )]
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $expiresAt = null;
 
     public function getId(): ?int
     {
@@ -89,6 +106,42 @@ class Links
     public function setUsageCount(int $usageCount): static
     {
         $this->usageCount = $usageCount;
+
+        return $this;
+    }
+
+    public function isDisposable(): ?bool
+    {
+        return $this->isDisposable;
+    }
+
+    public function setIsDisposable(bool $isDisposable): static
+    {
+        $this->isDisposable = $isDisposable;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getExpiresAt(): ?\DateTimeImmutable
+    {
+        return $this->expiresAt;
+    }
+
+    public function setExpiresAt(\DateTimeImmutable $expiresAt): static
+    {
+        $this->expiresAt = $expiresAt;
 
         return $this;
     }
