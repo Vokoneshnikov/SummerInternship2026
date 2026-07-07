@@ -2,13 +2,19 @@
 
 namespace App\Controller;
 
+use App\Entity\Links;
+use App\Entity\User;
+use App\Form\DeleteLinkType;
+use App\Form\LinkType;
 use App\Repository\LinksRepository;
 use App\Service\LinksService;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class LinkController extends AbstractController {
     private LinksService $linksService;
@@ -19,19 +25,7 @@ class LinkController extends AbstractController {
     #[Route('/links', name: 'home')]
     public function home(): Response
     {
-        $links = $this->linksService->index();
-
-        // Преобразуем объекты в массивы для шаблона
-        $linksData = array_map(function($link) {
-            return [
-                'id' => $link->getId(),
-                'oldLink' => $link->getOldLink(),
-                'newLink' => $link->getNewLink(),
-                'createdAt' => $link->getCreatedAt(),
-                'lastUsedAt' => $link->getLastUsedAt(),
-                'usageCount' => $link->getUsageCount(),
-            ];
-        }, $links);
+        $linksData = $this->linksService->index();
 
         return $this->render('link/index.html.twig', [
             'links' => $linksData,
@@ -44,37 +38,50 @@ class LinkController extends AbstractController {
     }
 
     #[Route('/create', name: 'create', methods: ['POST'])]
-    public function createNewLink(Request $request): JsonResponse
+    #[IsGranted('ROLE_USER')]
+    public function createNewLink(Request $request): Response
     {
-        $link = $request->request->get('link');
+        $link = new Links();
 
-        if (!$link) {
-            return $this->json(['error' => 'URL is required'], 400);
+        $form = $this->createForm(LinkType::class, $link);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            /** @var User $user */
+            $user = $this->getUser();
+
+            $this->linksService->createLink($link, $user);
         }
-
-        try {
-            $shortUrl = $this->linksService->createLink($link);
-
-            return $this->json([
-                'shortUrl' => $shortUrl
-            ]);
-        } catch (\Exception $e) {
-            return $this->json(['error' => $e->getMessage()], 400);
-        }
+        return $this->render('link/create.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
     #[Route('/short/{newLink}', name: 'redirect')]
     public function redirectToOriginal(string $newLink): Response
     {
-        $originalUrl = $this->linksService->getOriginalLink($newLink);
-        $this->linksService->updateLink($newLink);
+        $originalUrl = $this->linksService->processRedirect($newLink);
 
-        return $this->redirect($originalUrl);
+        if ($originalUrl) {
+            return $this->redirect($originalUrl);
+        }
+        return $this->redirectToRoute('home');
     }
     #[Route('/delete/{id}', name: 'delete')]
-    public function deleteLink(int $id)
+    #[IsGranted('ROLE_USER')]
+    public function deleteLink(Request $request, Links $link): Response
     {
-        $this->linksService->deleteLink($id);
+        $form = $this->createForm(DeleteLinkType::class, $link);
 
-        return new Response("<html><body>Deleted!</body></html>");
+        $form->handleRequest($request);
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->linksService->deleteLink($link, $user);
+        }
+        return $this->redirectToRoute('home');
     }
 }
