@@ -29,9 +29,6 @@ class LinksRepository extends ServiceEntityRepository
     }
     public function update(Links $link)
     {
-        $link->setUsageCount($link->getUsageCount() + 1);
-        $link->setLastUsedAt(new \DateTimeImmutable());
-
         $this->getEntityManager()->flush();
     }
     public function delete(Links $link)

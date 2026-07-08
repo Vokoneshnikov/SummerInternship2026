@@ -45,7 +45,7 @@ class LinkType extends AbstractType
                 ]
             ])
             ->add('expiresAt', DateTimeType::class, [
-                'label' => 'Дата устаревания (опционально)',
+                'label' => 'Дата устаревания',
                 'widget' => 'single_text',
                 'required' => false,
                 'html5' => true,  // Включаем HTML5

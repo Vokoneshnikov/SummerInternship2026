@@ -44,7 +44,7 @@ class Links
         value: "now",
         message: "Дата устаревания должна быть в будущем"
     )]
-    private ?\DateTimeImmutable $expiresAt = null;  // Меняем DateTimeInterface на DateTimeImmutable
+    private ?\DateTimeImmutable $expiresAt = null;
 
     public function getId(): ?int
     {
