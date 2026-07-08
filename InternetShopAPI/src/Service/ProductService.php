@@ -44,7 +44,7 @@ class ProductService {
     {
         $jsonString = file_get_contents('../products.json');
 
-        $array = json_decode($jsonString, true);
+        $array = json_decode($jsonString, true) ?? [];
 
         $usedIds = [];
 
@@ -63,7 +63,6 @@ class ProductService {
         $allIds = $this->productRepository->getAllIds();
 
         $deleted = array_diff($allIds, $usedIds);
-
         foreach ($deleted as $id) {
             $this->productRepository->delete($id);
         }
