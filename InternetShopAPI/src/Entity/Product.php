@@ -20,7 +20,7 @@ class Product
     #[ORM\Column(length: 128)]
     private ?string $name = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(length: 512, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 9, scale: 2)]
@@ -84,5 +84,16 @@ class Product
         $this->currency = $currency;
 
         return $this;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'price' => (float) $this->price,
+            'currency' => $this->currency->value,
+        ];
     }
 }
