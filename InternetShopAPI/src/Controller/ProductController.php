@@ -7,6 +7,7 @@ use App\Service\ProductService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class ProductController extends AbstractController {
@@ -18,13 +19,21 @@ class ProductController extends AbstractController {
     #[Route('/products', name: 'products', methods: ['GET'])]
     public function index(Request $request) :JSONResponse
     {
-        $query = $request->query->get('q');
-        $currency = $request->query->get('curr');
+        $query = $request->query->get('query');
+        $currency = $request->query->get('currency');
 
         $result = $this->productService->getProducts($query, $currency);
 
         return new JsonResponse($result);
 
+    }
+
+    #[Route('/products/update', name: 'rates', methods: ['GET'])]
+    public function update() : Response
+    {
+        $this->productService->updateProducts();
+
+        return new Response('', Response::HTTP_OK);
     }
 
 }
