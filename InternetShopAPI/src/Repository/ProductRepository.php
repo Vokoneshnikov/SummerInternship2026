@@ -18,7 +18,14 @@ class ProductRepository extends ServiceEntityRepository
 
     public function getProducts(string $query): array
     {
-        //находим по полнотекстовому поиску
+        //TODO сделать хороший полнотекстовой поиск
+
+        return $this->createQueryBuilder('p')
+            ->where('p.name LIKE :query')
+            ->orWhere('p.description LIKE :query')
+            ->setParameter('query', '%' . $query . '%')
+            ->getQuery()
+            ->getResult();
     }
     public function updateProduct(Product $product): void
     {
@@ -34,6 +41,19 @@ class ProductRepository extends ServiceEntityRepository
 
         $this->getEntityManager()->flush();
     }
+    public function getAllIds() : array
+    {
+        $products =  $this->findAll();
+        return array_column($products, 'id');
+    }
+    public function delete($id) : void
+    {
+        $product = $this->find($id);
+
+        $this->getEntityManager()->remove($product);
+        $this->getEntityManager()->flush();
+    }
+
     private function createProduct(Product $product): void
     {
         $this->getEntityManager()->persist($product);
