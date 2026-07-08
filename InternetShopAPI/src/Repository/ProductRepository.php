@@ -44,7 +44,10 @@ class ProductRepository extends ServiceEntityRepository
     public function getAllIds() : array
     {
         $products =  $this->findAll();
-        return array_column($products, 'id');
+
+        return array_map(function($product) {
+            return $product->getId();
+        }, $products);
     }
     public function delete($id) : void
     {
