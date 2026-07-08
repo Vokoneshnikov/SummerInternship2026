@@ -17,10 +17,10 @@ class ExchangeRates
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(enumType: Currency::class)]
+    #[ORM\Column(name: 'from_currency', enumType: Currency::class)]
     private ?Currency $from_currency = null;
 
-    #[ORM\Column(enumType: Currency::class)]
+    #[ORM\Column(name: 'to_currency', enumType: Currency::class)]
     private ?Currency $toCurrency = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 20, scale: 10)]
