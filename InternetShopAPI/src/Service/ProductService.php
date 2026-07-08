@@ -14,42 +14,58 @@ class ProductService {
 
     public function getProducts(string $query, string $currency) : array
     {
-        $currEnum = Currency::tryFrom(strtoupper($currency));
 
-        if ($currEnum === null) {
-            $currEnum = Currency::USD;
-        }
+        $toCurrencyEnum = Currency::tryFrom(strtoupper($currency)) ?? Currency::USD;
 
         $products = $this->productRepository->getProducts($query);
-        $rates = $this->exchangeRatesService->getExchangeRates($currEnum);
+        $rates = $this->exchangeRatesService->getExchangeRates($toCurrencyEnum);
+
+        $realRates = [];
+
+        foreach ($rates as $rate) {
+            $realRates[$rate->getFromCurrency()->value] = $rate->getRate();
+        }
+
+        $result = [];
 
         foreach ($products as $product) {
-            $curr = $product->getCurrency();
+            $curr = $product->getCurrency()->value;
             $price = $product->getPrice();
-            $rate = $rates[$curr];
+            $rate = $realRates[$curr];
 
             $newPrice = $price * $rate;
 
             $product->setPrice($newPrice);
+            $result[] = $product->toArray();
         }
-        return $products;
+        return $result;
     }
-    public function updateProducts(string $json) : void
+    public function updateProducts() : void
     {
-        $array = json_decode($json, true);
+        $jsonString = file_get_contents('../products.json');
 
-        if ($array === null) {
-            return;
-        }
+        $array = json_decode($jsonString, true);
+
+        $usedIds = [];
+
         foreach ($array as $item) {
+            $usedIds[] = $item['id'];
+
             $product = new Product();
             $product->setId($item['id']);
             $product->setName($item['name']);
             $product->setDescription($item['description']);
             $product->setPrice($item['price']);
-            $product->setCurrency($item['currency']);
+            $product->setCurrency(Currency::tryFrom($item['currency']));
 
             $this->productRepository->updateProduct($product);
+        }
+        $allIds = $this->productRepository->getAllIds();
+
+        $deleted = array_diff($allIds, $usedIds);
+
+        foreach ($deleted as $id) {
+            $this->productRepository->delete($id);
         }
     }
 }
