@@ -19,7 +19,7 @@ class ProductController extends AbstractController {
     #[Route('/products', name: 'products', methods: ['GET'])]
     public function index(Request $request) :JSONResponse
     {
-        $query = $request->query->get('query');
+        $query = $request->query->get('query') ?? '';
         $currency = $request->query->get('currency');
 
         $result = $this->productService->getProducts($query, $currency);
