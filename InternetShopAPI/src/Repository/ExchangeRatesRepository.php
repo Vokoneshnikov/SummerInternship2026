@@ -19,7 +19,7 @@ class ExchangeRatesRepository extends ServiceEntityRepository
 
     public function getRatesForCurrency(Currency $currency) : array
     {
-        return $this->findBy(['currency' => $currency]);
+        return $this->findBy(['toCurrency' => $currency]);
     }
 
     public function updateRate(ExchangeRates $rate): void
