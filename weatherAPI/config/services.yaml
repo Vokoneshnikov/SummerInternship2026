@@ -1,0 +1,26 @@
+# config/services.yaml
+parameters:
+    # Определяем параметры (опционально)
+    weather.api_key: '%env(OPENWEATHER_API_KEY)%'
+    weather.api_url: '%env(OPENWEATHER_API_URL)%'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    # 1. Явное определение сервиса
+    App\Service\WeatherApiService:
+        arguments:
+            $apiKey: '%weather.api_key%'
+            $apiUrl: '%weather.api_url%'
+
+    # 2. Автоматическая регистрация остальных сервисов
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Service/WeatherApiService.php'
+
