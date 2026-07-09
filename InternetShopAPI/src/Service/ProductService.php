@@ -42,7 +42,14 @@ class ProductService {
     }
     public function updateProducts() : void
     {
-        $jsonString = file_get_contents('../products.json');
+        $projectRoot = __DIR__ . '/../../';
+        $filePath = $projectRoot . 'products.json';
+
+        if (!file_exists($filePath)) {
+            throw new \RuntimeException(sprintf('Файл %s не найден', $filePath));
+        }
+
+        $jsonString = file_get_contents($filePath);
 
         $array = json_decode($jsonString, true) ?? [];
 
