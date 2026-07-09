@@ -16,14 +16,16 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
-    public function getProducts(string $query): array
+    public function getProducts(string $query, int $limit = 20, float $threshold = 0.1): array
     {
-        //TODO сделать хороший полнотекстовой поиск
+        //TODO ПОИГРАТЬ С ЧИСЛАМИ ТАК, ЧТОБЫ ЗАПРОСЫ ВЫВОДИЛИСЬ БОЛЕЕ СТРУКТУРИРОВАННО
 
         return $this->createQueryBuilder('p')
-            ->where('p.name LIKE :query')
-            ->orWhere('p.description LIKE :query')
+            ->where('SIMILARITY(p.name, :query) > :threshold')
             ->setParameter('query', '%' . $query . '%')
+            ->setParameter('threshold', $threshold)
+            ->orderBy('SIMILARITY(p.name, :query)', 'DESC')
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
     }
