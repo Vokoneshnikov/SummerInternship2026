@@ -27,13 +27,4 @@ class ProductController extends AbstractController {
         return new JsonResponse($result);
 
     }
-
-    #[Route('/products/update', name: 'rates', methods: ['GET'])]
-    public function update() : Response
-    {
-        $this->productService->updateProducts();
-
-        return new Response('', Response::HTTP_OK);
-    }
-
 }
