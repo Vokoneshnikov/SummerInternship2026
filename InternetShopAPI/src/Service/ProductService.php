@@ -59,7 +59,7 @@ class ProductService {
             $usedIds[] = $item['id'];
 
             $product = new Product();
-            $product->setId($item['id']);
+            $product->setIdFromString($item['id']);
             $product->setName($item['name']);
             $product->setDescription($item['description']);
             $product->setPrice($item['price']);
