@@ -6,16 +6,17 @@ use App\Enums\Currency;
 use App\Repository\ProductRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Attribute\Broadcast;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 //#[Broadcast]
 class Product
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'uuid', unique: true)]
+    private ?UuidInterface $id = null;
 
     #[ORM\Column(length: 128)]
     private ?string $name = null;
@@ -29,11 +30,16 @@ class Product
     #[ORM\Column(enumType: Currency::class)]
     private ?Currency $currency = null;
 
-    public function getId(): ?int
+    public function setIdFromString(string $id): self
+    {
+        $this->id = Uuid::fromString($id);
+        return $this;
+    }
+    public function getId(): ?UuidInterface
     {
         return $this->id;
     }
-    public function setId(?int $id): void
+    public function setId(?UuidInterface $id): void
     {
         $this->id = $id;
     }
