@@ -20,7 +20,7 @@ class ProductController extends AbstractController {
     public function index(Request $request) :JSONResponse
     {
         $query = $request->query->get('query') ?? '';
-        $currency = $request->query->get('currency');
+        $currency = $request->query->get('currency') ?? 'USD';
 
         $result = $this->productService->getProducts($query, $currency);
 
