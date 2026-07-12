@@ -8,9 +8,13 @@ use App\Repository\ExchangeRatesRepository;
 use App\Repository\ProductRepository;
 
 class ProductService {
-
-
-    public function __construct(private readonly ProductRepository $productRepository, private readonly ExchangeRatesService $exchangeRatesService) {}
+    public function __construct(
+        private readonly ProductRepository $productRepository,
+        private readonly ExchangeRatesService $exchangeRatesService,
+        private ?string $productFilePath = null
+    ) {
+        $this->productFilePath = __DIR__ . '/../../products.json';
+    }
 
     public function getProducts(string $query, string $currency) : array
     {
@@ -31,7 +35,7 @@ class ProductService {
         foreach ($products as $product) {
             $curr = $product->getCurrency()->value;
             $price = $product->getPrice();
-            $rate = $realRates[$curr];
+            $rate = $realRates[$curr] ?? 1.0;
 
             $newPrice = $price * $rate;
 
@@ -42,14 +46,12 @@ class ProductService {
     }
     public function updateProducts() : void
     {
-        $projectRoot = __DIR__ . '/../../';
-        $filePath = $projectRoot . 'products.json';
 
-        if (!file_exists($filePath)) {
-            throw new \RuntimeException(sprintf('Файл %s не найден', $filePath));
+        if (!file_exists($this->productFilePath)) {
+            throw new \RuntimeException(sprintf('Файл %s не найден', $this->productFilePath));
         }
 
-        $jsonString = file_get_contents($filePath);
+        $jsonString = file_get_contents($this->productFilePath);
 
         $array = json_decode($jsonString, true) ?? [];
 
@@ -63,7 +65,8 @@ class ProductService {
             $product->setName($item['name']);
             $product->setDescription($item['description']);
             $product->setPrice($item['price']);
-            $product->setCurrency(Currency::tryFrom($item['currency']));
+            $currency = Currency::tryFrom(strtoupper($item['currency'])) ?? Currency::USD;
+            $product->setCurrency($currency);
 
             $this->productRepository->updateProduct($product);
         }

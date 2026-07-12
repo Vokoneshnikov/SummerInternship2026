@@ -5,19 +5,22 @@ namespace App\Service;
 use App\Entity\ExchangeRates;
 use App\Enums\Currency;
 use App\Repository\ExchangeRatesRepository;
-use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class ExchangeRatesService {
-
-    public function __construct(private ExchangeRatesRepository $repository) {}
+class ExchangeRatesService
+{
+    public function __construct(
+        private ExchangeRatesRepository $repository,
+        private HttpClientInterface $httpClient
+    ) {}
 
     public function updateRates(): void
     {
-        $client = HttpClient::create();
-
         foreach (Currency::cases() as $currency) {
-
-            $response = $client->request('GET', "https://api.exchangerate.fun/latest?base=" . $currency->name);
+            $response = $this->httpClient->request(
+                'GET',
+                "https://api.exchangerate.fun/latest?base=" . $currency->name
+            );
 
             $array = $response->toArray();
 
