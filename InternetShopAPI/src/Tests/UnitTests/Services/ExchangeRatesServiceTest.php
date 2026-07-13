@@ -6,12 +6,13 @@ use App\Entity\ExchangeRates;
 use App\Enums\Currency;
 use App\Repository\ExchangeRatesRepository;
 use App\Service\ExchangeRatesService;
-use PHPUnit\Framework\TestCase;
+//use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class ExchangeRatesServiceTest extends TestCase
+class ExchangeRatesServiceTest extends KernelTestCase
 {
     private ExchangeRatesRepository $repository;
     private ExchangeRatesService $service;

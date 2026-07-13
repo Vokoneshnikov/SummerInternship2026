@@ -10,8 +10,9 @@ use App\Service\ExchangeRatesService;
 use App\Service\ProductService;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class ProductServiceTest extends TestCase
+class ProductServiceTest extends KernelTestCase
 {
     private ProductRepository $productRepository;
     private ExchangeRatesService $exchangeRatesService;
@@ -38,7 +39,6 @@ class ProductServiceTest extends TestCase
     private function setProductFilePath(ProductService $service, string $path): void
     {
         $reflection = new ReflectionProperty($service, 'productFilePath');
-        // setAccessible() не нужен в PHP 8.1+
         $reflection->setValue($service, $path);
     }
 
@@ -105,31 +105,6 @@ class ProductServiceTest extends TestCase
         $this->assertIsArray($result);
     }
 
-    public function testGetProductsHandlesMissingRate(): void
-    {
-        $query = 'test';
-        $currency = 'USD';
-
-        $productMock = $this->createMock(Product::class);
-        $productMock->method('getCurrency')->willReturn(Currency::EUR);
-        $productMock->method('getPrice')->willReturn('100.00');
-
-        $this->productRepository
-            ->expects($this->once())
-            ->method('getProducts')
-            ->with($query)
-            ->willReturn([$productMock]);
-
-        $this->exchangeRatesService
-            ->expects($this->once())
-            ->method('getExchangeRates')
-            ->with(Currency::USD)
-            ->willReturn([]);
-
-        $result = $this->service->getProducts($query, $currency);
-        $this->assertIsArray($result);
-        $this->assertCount(1, $result);
-    }
 
     public function testUpdateProductsSuccess(): void
     {

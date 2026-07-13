@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\UnitTests\Repository;
+namespace App\Tests\UnitTests\Repositories;
 
 use App\Entity\Product;
 use App\Enums\Currency;
@@ -11,8 +11,9 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\UuidInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class ProductRepositoryTest extends TestCase
+class ProductRepositoryTest extends KernelTestCase
 {
     private ProductRepository $repository;
     private EntityManagerInterface $entityManager;

@@ -16,7 +16,7 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
-    public function getProducts(string $query, int $limit = 20, float $threshold = 0.1): array
+    public function getProducts(string $query, int $limit = 20, float $threshold = 0.0): array
     {
         //TODO ПОИГРАТЬ С ЧИСЛАМИ ТАК, ЧТОБЫ ЗАПРОСЫ ВЫВОДИЛИСЬ БОЛЕЕ СТРУКТУРИРОВАННО
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\UnitTests\Repository;
+namespace App\Tests\UnitTests\Repositories;
 
 use App\Entity\ExchangeRates;
 use App\Enums\Currency;
@@ -8,8 +8,9 @@ use App\Repository\ExchangeRatesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class ExchangeRatesRepositoryTest extends TestCase
+class ExchangeRatesRepositoryTest extends KernelTestCase
 {
     private ExchangeRatesRepository $repository;
     private EntityManagerInterface $entityManager;

@@ -7,8 +7,9 @@ use App\Enums\SyncType;
 use App\Repository\SyncStateRepository;
 use App\Service\SyncStateService;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class SyncStateServiceTest extends TestCase
+class SyncStateServiceTest extends KernelTestCase
 {
     private SyncStateRepository $repository;
     private SyncStateService $service;
