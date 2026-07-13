@@ -1,1 +1,142 @@
-[{"id":"b00b28bb-55d6-4a75-b3d0-b2f4b3442daa","name":"Product 1","description":"Description 1","price":100,"currency":"INVALID"}]
+[
+    {
+        "id": "a3f8c2e1-5b4d-4e9f-8a3c-1d4e5f6a7b8c",
+        "name": "Ноутбук ASUS ROG Strix G16",
+        "description": "Игровой ноутбук с 16-дюймовым дисплеем 2.5K, процессором Intel Core i9-13980HX и видеокартой NVIDIA GeForce RTX 4080. Идеален для требовательных игр и профессиональной работы с графикой.",
+        "price": 2499.99,
+        "currency": "USD"
+    },
+    {
+        "id": "b8f7d3e2-6c5e-4a0f-9b4d-2e5f6a7b8c9d",
+        "name": "Беспроводные наушники Sony WH-1000XM5",
+        "description": "Флагманские наушники с активным шумоподавлением, до 30 часов работы и превосходным качеством звука. Поддержка LDAC и адаптивное управление шумом.",
+        "price": 399.00,
+        "currency": "USD"
+    },
+    {
+        "id": "c9e8d4f3-7d6f-4b1a-9c5e-3f6a7b8c9d0e",
+        "name": "Смартфон Apple iPhone 15 Pro Max",
+        "description": "Флагманский смартфон с титановым корпусом, чипом A17 Pro, 48-МП камерой и портом USB-C. Доступен в цветах: натуральный титан, синий, белый и черный.",
+        "price": 1199.99,
+        "currency": "USD"
+    },
+    {
+        "id": "d0e9f5a4-8e7f-4c2b-0d6f-4a7b8c9d0e1f",
+        "name": "Внешний SSD Samsung T7 Shield",
+        "description": "Портативный твердотельный накопитель с защитой от воды и пыли по стандарту IP65, скоростью чтения до 1050 МБ/с и емкостью 1 ТБ.",
+        "price": 149.99,
+        "currency": "EUR"
+    },
+    {
+        "id": "e1f0a6b5-9f8e-4d3c-1e7f-5b8c9d0e1f2a",
+        "name": "Игровая клавиатура Razer BlackWidow V4 Pro",
+        "description": "Механическая клавиатура с опциональными переключателями Razer, RGB-подсветкой Chroma и магнитной подставкой для рук.",
+        "price": 229.99,
+        "currency": "CAD"
+    },
+    {
+        "id": "f2a1b7c6-0a9f-4e4d-2f8a-6c9d0e1f2a3b",
+        "name": "Беспроводная мышь Logitech MX Master 3S",
+        "description": "Флагманская беспроводная мышь с уникальным колесом прокрутки MagSpeed, разрешением 8000 DPI и возможностью работы на любой поверхности.",
+        "price": 99.99,
+        "currency": "USD"
+    },
+    {
+        "id": "a4c3d2e1-6b5a-4f8e-9c7d-1e2f3a4b5c6d",
+        "name": "Монитор LG UltraGear 27GP950-B",
+        "description": "27-дюймовый 4K монитор для игр с частотой обновления 144 Гц, поддержкой NVIDIA G-SYNC и AMD FreeSync, временем отклика 1 мс.",
+        "price": 799.99,
+        "currency": "USD"
+    },
+    {
+        "id": "b5d4e3f2-7c6b-4a9f-0d8e-2f3a4b5c6d7e",
+        "name": "Процессор AMD Ryzen 9 7950X",
+        "description": "16-ядерный процессор для настольных ПК с тактовой частотой до 5.7 ГГц, 64 МБ кэша L3 и поддержкой DDR5 памяти.",
+        "price": 699.99,
+        "currency": "USD"
+    },
+    {
+        "id": "c6e5f4a3-8d7c-4b0a-1e9f-3a4b5c6d7e8f",
+        "name": "Видеокарта NVIDIA GeForce RTX 4090",
+        "description": "Флагманская видеокарта с 24 ГБ памяти GDDR6X, поддержкой трассировки лучей и технологии DLSS 3. Идеальна для игр в 8K и профессиональных задач.",
+        "price": 1599.99,
+        "currency": "USD"
+    },
+    {
+        "id": "d7f6e5a4-9e8d-4c1b-2f0a-4b5c6d7e8f9a",
+        "name": "Планшет Apple iPad Pro 12.9",
+        "description": "Профессиональный планшет с дисплеем Liquid Retina XDR, чипом M2, поддержкой Apple Pencil и Magic Keyboard. Идеален для дизайнеров и художников.",
+        "price": 1099.00,
+        "currency": "USD"
+    },
+    {
+        "id": "e8a7f6b5-0f9e-4d2c-3a1b-5c6d7e8f9a0b",
+        "name": "Умные часы Apple Watch Series 9",
+        "description": "Новейшие умные часы с дисплеем Always-On, чипом S9, датчиком температуры и функцией определения падений. Доступны в корпусах 41 и 45 мм.",
+        "price": 399.00,
+        "currency": "USD"
+    },
+    {
+        "id": "f9b8a7c6-1a0f-4e3d-4b2c-6d7e8f9a0b1c",
+        "name": "Фитнес-браслет Xiaomi Mi Band 8",
+        "description": "Бюджетный фитнес-браслет с AMOLED-дисплеем, отслеживанием сна, пульса и физической активности, защитой от воды 5 ATM.",
+        "price": 39.99,
+        "currency": "EUR"
+    },
+    {
+        "id": "a0c9b8d7-2b1a-4f4e-5c3d-7e8f9a0b1c2d",
+        "name": "Док-станция Dell WD19S",
+        "description": "Универсальная док-станция с поддержкой до 3 мониторов, портами USB-C, USB-A, HDMI, DisplayPort и Ethernet. Мощность зарядки 130 Вт.",
+        "price": 279.99,
+        "currency": "USD"
+    },
+    {
+        "id": "b1d0c9e8-3c2b-4a5f-6d4e-8f9a0b1c2d3e",
+        "name": "Веб-камера Logitech Brio 4K",
+        "description": "Профессиональная веб-камера с разрешением 4K, технологией HDR, двумя микрофонами и поддержкой Windows Hello.",
+        "price": 199.99,
+        "currency": "USD"
+    },
+    {
+        "id": "c2e1d0f9-4d3c-4b6a-7e5f-9a0b1c2d3e4f",
+        "name": "Усилитель звука FiiO K5 Pro",
+        "description": "Настольный ЦАП и усилитель для наушников с поддержкой DSD512 и PCM 768 кГц/32 бит, выходной мощностью 1.5 Вт и разъемами 6.35 мм и 4.4 мм.",
+        "price": 149.99,
+        "currency": "USD"
+    },
+    {
+        "id": "d3f2e1a0-5e4d-4c7b-8f6a-0b1c2d3e4f5a",
+        "name": "Сетевое хранилище Synology DS923+",
+        "description": "4-х дисковый NAS с процессором AMD Ryzen R1600, поддержкой M.2 NVMe SSD, возможностью расширения до 9 дисков и слотом для 10 Гбит/с сети.",
+        "price": 599.99,
+        "currency": "USD"
+    },
+    {
+        "id": "e4f3a2b1-6f5e-4d8c-9a7b-1c2d3e4f5a6b",
+        "name": "Принтер Brother HL-L8360CDW",
+        "description": "Цветной лазерный принтер с автоматической двусторонней печатью, скоростью 33 стр/мин и поддержкой Wi-Fi, Ethernet и USB.",
+        "price": 449.00,
+        "currency": "USD"
+    },
+    {
+        "id": "f5a4b3c2-7a6f-4e9d-0b8c-2d3e4f5a6b7c",
+        "name": "Роутер Asus ROG Rapture GT-AXE16000",
+        "description": "Игровой роутер с поддержкой Wi-Fi 6E, четырьмя диапазонами, скоростью до 16000 Мбит/с и технологией Triple-level Game Acceleration.",
+        "price": 699.99,
+        "currency": "USD"
+    },
+    {
+        "id": "a6b5c4d3-8b7a-4f0e-1c9d-3e4f5a6b7c8d",
+        "name": "Смартфон Samsung Galaxy S24 Ultra",
+        "description": "Флагманский смартфон с дисплеем Dynamic AMOLED 2X, чипом Snapdragon 8 Gen 3, 200-МП камерой и поддержкой S Pen. Доступен в титановых цветах.",
+        "price": 1299.99,
+        "currency": "USD"
+    },
+    {
+        "id": "b7c6d5e4-9c8b-4a1f-2d0e-4f5a6b7c8d9e",
+        "name": "TEST",
+        "description": "Водонепроницаемая портативная колонка с мощным звуком, встроенным пауэрбанком и поддержкой PartyBoost. Время работы до 20 часов.",
+        "price": 179.99,
+        "currency": "EUR"
+    }
+]
