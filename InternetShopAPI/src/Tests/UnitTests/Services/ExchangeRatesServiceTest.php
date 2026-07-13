@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\UnitTests;
+namespace App\Tests\UnitTests\Services;
 
 use App\Entity\ExchangeRates;
 use App\Enums\Currency;
